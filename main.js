@@ -35,7 +35,6 @@ let selectedShowProducts;
 let shoppingCarts;
 let cartProductItems = [];
 
-console.log(purchaseBtn);
 purchaseBtn.forEach(btn => {
 	if (cartProductItems.length < 1) btn.classList.add("hidden");
 });
@@ -166,9 +165,8 @@ const addToCart = function (btn) {
 
 			promise1.then(() => {
 				deleteCartBtn = [...document.querySelectorAll("#del")];
-				console.log(deleteCartBtn);
+
 				shoppingCarts = [...document.querySelectorAll(".shopping--cart")];
-				console.log(shoppingCarts);
 
 				renderTotalCartPrice();
 
@@ -242,6 +240,7 @@ const removeCartProduct = function (product) {
 				// delete product from cartProductITems Array
 				cartProductItems.splice(index, 1);
 
+				// removing selected product each side (dropDown and shopping Cart section)
 				shoppingCarts.find(cart => {
 					if (
 						+cart.children[3].children[0].textContent.replace("ID: ", "") ===
@@ -252,9 +251,6 @@ const removeCartProduct = function (product) {
 			}
 
 			renderTotalCartPrice();
-
-			console.log(selectedEl);
-			console.log(shoppingCarts);
 			renderCartCount();
 			purchaseBtn.forEach(btn => {
 				if (cartProductItems.length < 1) btn.classList.add("hidden");
@@ -401,113 +397,3 @@ getCategory();
 3- fetch ederken hata ile karşılaşırsa hata mesajı print et
 4- sepete tıklandığında shopping cart sekmesini ekrana getir ve hoverlandığında küçük bir dropdown içine renderla
 */
-
-// reverse string exercise
-("Hi My name is Andrei");
-function reverse(str) {
-	let deneme = str.split("").reverse().join("");
-
-	console.log(deneme);
-}
-
-reverse("Hi My name is Andrei");
-
-// merge arrays exercise
-function mergeSortedArrays(a, b) {
-	// let lastItem = a.pop();
-	// console.log(lastItem);
-	// let newArr = a.concat(b).concat(lastItem);
-	// console.log(newArr);
-	let lastItem = a.indexOf(a[a.length - 1]);
-	a.push(...a.splice(lastItem, 1, ...b));
-	console.log(a);
-}
-
-mergeSortedArrays([0, 3, 4, 31], [4, 6, 30]);
-
-//GOOGLE QUESTİON
-
-// find first repeated items in array exercise
-
-const array1 = [2, 5, 1, 2, 3, 5, 1, 2, 4]; // return second 2
-const array2 = [2, 1, 1, 2, 3, 5, 1, 2, 4]; //return second 1
-const array3 = [2, 3, 4, 5]; // return undefined
-
-// solution 1#
-function repeatedItem(array, item) {
-	let index = [];
-	for (let i = 0; i < array.length; i++) {
-		if (array[i] === item) index.push(i);
-	}
-	if (index.length < 2) return undefined;
-	console.log(index);
-	return array[index[1]];
-}
-
-// solution 2#
-function repeatedItem2(array, item) {
-	let index = [];
-	array.forEach((val, i) => {
-		array[i] === item ? index.push(i) : "";
-	});
-	console.log(index);
-	// return array[index[1]];
-	let result;
-	return (result = array.splice(index[1], 1).join(""));
-}
-
-// solution 3#
-function repeatedItem3(array, item) {
-	let index = [];
-	let result = array.reduce((acc, val, i) => {
-		if (array[i] === item) index.push(i);
-		if (index.length > 1) {
-			array[index[1]] === item ? (acc = array[index[1]]) : "";
-		} else acc = undefined;
-		return acc;
-	}, 0);
-	return result;
-}
-
-// console.log(repeatedItem(array1));
-// console.log(array1);
-
-// console.log(repeatedItem2(array2, 2));
-// console.log(array2);
-
-// console.log(repeatedItem3(array1, 3));
-// console.log(array1);
-
-// find without specifying item
-function getSecondRepeatItem(input) {
-	let result = {};
-	let index = [];
-	let deleteKeys = [];
-	let firstIndex = input.reduce((acc, val, i) => {
-		if (acc[val] === undefined) {
-			acc[val] = i;
-		} else {
-			result[input[i]] === undefined ? (result[input[i]] = i) : "";
-			index.push(i);
-		}
-		return acc;
-	}, {});
-	for (let i = 0; i < Object.keys(firstIndex).length; i++) {
-		result[Object.keys(firstIndex)[i]] === undefined
-			? deleteKeys.push(Object.keys(firstIndex)[i])
-			: "";
-	}
-
-	deleteKeys.forEach(val => delete firstIndex[val]);
-	console.log("Repeated indexs => ", index);
-	console.log("Items First index => ", firstIndex);
-	console.log("Items First Repeat index => ", result);
-	console.log(
-		"First Repeat Item and index => ",
-		input[result[input[index[0]]]],
-		"and index => ",
-		index[0]
-	);
-	return input[result[input[index[0]]]];
-}
-getSecondRepeatItem([2, 1, 1, 2, 3, 5, 1, 2, 4]);
