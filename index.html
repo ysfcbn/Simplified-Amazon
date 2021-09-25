@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="style.css" />
+		<title>Document</title>
+	</head>
+	<body>
+		<div class="navbar">
+			<div class="container">
+				<div class="logo">
+					<img src="./img/amazon_icon2.png" alt="" />
+				</div>
+
+				<div class="search-bar">
+					<input type="search" placeholder="Search..." />
+					<button><img src="./img/search.png" alt="" /></button>
+				</div>
+
+				<div class="nav--cart">
+					<div class="nav--shopping--cart">
+						<p>Cart</p>
+						<span class="count">0</span>
+						<img src="./img/shopping-cart.png" alt="" />
+						<div class="cart--product--list">
+							<div class="total--price">
+								<div>
+									Total price(total product:
+									<span id="total--product">0</span>):
+									<span id="sub--total"> 0.00 $</span>
+								</div>
+								<button class="purchase--btn">Purchase</button>
+								<div></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="categories hidden">
+			<div class="header">
+				<h1>Categories</h1>
+			</div>
+			<!--
+        <div class="categories--cart">
+          <h3 class="category--name">${data[0].category}</h3>
+          <img src="${img}" alt="" />
+          <h3>Quantity of products: ${data.length}</h3>
+          <button class="show--product">Show Products</button>
+        </div> 
+      -->
+		</div>
+
+		<div class="products hidden">
+			<!-- <div class="header">
+        <h1>Products</h1>
+      </div> -->
+			<!-- 
+      <div class="products--cart">
+        <h3>"${product.title}"</h3>
+        <img
+        src="${product.image}"
+        alt=""
+        />
+        <h3>Price: ${product.price} $</h3>
+        <h5>ID: ${product.id} </h5>
+        <button class = "add--cart">Add to Cart</button>
+      </div>
+       -->
+		</div>
+
+		<div class="cart hidden">
+			<div class="header">
+				<h1>Shopping Cart</h1>
+			</div>
+			<div class="total--price">
+				<div>
+					Total price(total product: <span id="total--product2">0</span>):
+					<span id="sub--total2"> 0.00 $</span>
+				</div>
+				<button class="purchase--btn">Purchase</button>
+				<div></div>
+			</div>
+			<!-- 
+      <div class="shopping--cart">
+       
+        <div class="img">
+          <img
+            src="https://fakestoreapi.com/img/71pWzhdJNwL._AC_UL640_QL65_ML3_.jpg"
+            alt="jewelery"
+          />
+        </div>
+        <div class="description">
+          <h3>Solid Gold Petite Micropave</h3>
+          <h3>
+            USB 3.0 and USB 2.0 Compatibility Fast data transfers Improve PC
+            Performance High Capacity; Compatibility Formatted NTFS for Windows
+            10, Windows 8.1, Windows 7; Reformatting may be required for other
+            operating systems; Compatibility may vary depending on user’s
+            hardware configuration and operating system
+          </h3>
+          <div>
+            <label for="quantity">Quantity:</label>
+            <select name="" id="quantity">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          <div class="price">
+            <h3>price $</h3>
+            <h3>+tax = total price$</h3>
+          </div>
+        </div>
+        <div class="delete">
+          <img src="./img/delete.png" alt="delete" />
+        </div>
+        <div class="id">
+          <h3>ID: 20</h3>
+        </div>
+           -->
+		</div>
+
+		<script src="main.js"></script>
+	</body>
+</html>
