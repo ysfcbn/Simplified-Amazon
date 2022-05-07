@@ -29,6 +29,7 @@ const subTotal = document.getElementById('sub--total');
 const totalProduct2 = document.getElementById('total--product2');
 const subTotal2 = document.getElementById('sub--total2');
 const purchaseBtn = [...document.querySelectorAll('.purchase--btn')];
+const loadSpinner = document.querySelector('.ring');
 
 let state = {};
 let selectedShowProducts;
@@ -61,6 +62,7 @@ const getCategory = function () {
 					return fetch(url)
 						.then(res => res.json())
 						.then(data => {
+							loadSpinner.classList.add('hidden');
 							categories.classList.remove('hidden');
 							renderCategory(data, data[2].image);
 							return data;
@@ -117,16 +119,27 @@ const getProduct = function (data) {
 		});
 	});
 };
+// const LoadSpinner = function () {};
+
+const spinner = function (e, selectedEl) {
+	e.target.style.visibility = 'hidden';
+	selectedEl.children[5].classList.remove('hidden');
+
+	setTimeout(() => {
+		e.target.style.visibility = 'visible';
+		selectedEl.children[5].classList.add('hidden');
+	}, 1000);
+};
 
 const addToCart = function (btn) {
 	let selectedProductID;
 	let deleteCartBtn;
 	let quantityElID;
-	// let changedQuantity;
+	let selectedEl;
 
 	btn.forEach(el => {
 		el.addEventListener('click', function (e) {
-			let selectedEl = e.target.closest('.products--cart');
+			selectedEl = e.target.closest('.products--cart');
 			selectedProductID = selectedEl.children[3].textContent.replace(
 				'ID: ',
 				''
@@ -146,15 +159,19 @@ const addToCart = function (btn) {
 				cartProductItems.some(val => {
 					if (val.id === result.id) {
 						val.quantity === 5 ? alert('You cant add the product over 5!') : '';
-						val.quantity < 5
-							? (val.quantity += 1)
-							: (val.quantity = val.quantity);
+						if (val.quantity < 5) {
+							val.quantity += 1;
+							spinner(e, selectedEl);
+						} else {
+							val.quantity = val.quantity;
+						}
+
 						pushData = false;
 					}
 				});
 			}
 
-			pushData ? cartProductItems.push(result) : '';
+			pushData ? cartProductItems.push(result) && spinner(e, selectedEl) : '';
 			renderCartCount();
 			let promise1 = new Promise(resolve => {
 				if (pushData) {
@@ -170,6 +187,15 @@ const addToCart = function (btn) {
 				shoppingCarts = [...document.querySelectorAll('.shopping--cart')];
 				console.log(shoppingCarts);
 				renderTotalCartPrice();
+				setTimeout(() => {
+					shoppingCarts.forEach(el => {
+						console.log(el);
+						for (let i = 0; i < el.childElementCount - 1; i++) {
+							el.children[i].classList.remove('hidden');
+						}
+						el.children[el.childElementCount - 1].classList.add('hidden');
+					});
+				}, 1000);
 
 				// increase quantity of current product
 				if (!pushData) {
@@ -180,11 +206,12 @@ const addToCart = function (btn) {
 						) {
 							//buraya eklemeyi dene
 
-							// re-render price depends to quantity
-							updatePrice(el, result);
-
-							// increase quantity value
-							el.children[1].children[2].children[1].value = result.quantity;
+							setTimeout(() => {
+								// re-render price depends to quantity
+								updatePrice(el, result);
+								// increase quantity value
+								el.children[1].children[2].children[1].value = result.quantity;
+							}, 1000);
 						}
 					});
 				}
@@ -302,6 +329,12 @@ const renderProduct = function (product) {
     <h3>Price: ${product.price} $</h3>
     <h5>ID: ${product.id} </h5>
     <button class = "add--cart">Add to Cart</button>
+    <div class="lds-ellipsis hidden">
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
   </div>
   `;
 
@@ -311,14 +344,14 @@ const renderProduct = function (product) {
 const renderCartProduct = function (product) {
 	shoppingCart.classList.remove('hidden');
 	const html = `
-      <div class="shopping--cart">
-        <div class="img">
+	 <div class="shopping--cart">
+	 	<div class="img hidden">
           <img
             src="${product.image}"
             alt=""
           />
         </div>
-        <div class="description">
+        <div class="description hidden">
           <h3>${product.title}</h3>
           <h3 class ="product-desc">
            ${product.description}
@@ -339,12 +372,16 @@ const renderCartProduct = function (product) {
             <h3>${' = ' + product.totalPrice + ' $'}</h3>
           </div>
         </div>
-        <div class="delete">
+        <div class="delete hidden">
           <img src="./img/delete.png" alt="delete" id ="del" />
         </div>
-        <div class="id">
+        <div class="id hidden">
           <h3>ID: ${product.id}</h3>
         </div>
+		<div class="ring">
+				Loading
+			<span></span>
+		</div>
       </div>
      
   `;
