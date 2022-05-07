@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class User {
 	constructor(name, active, cart, purchase) {
@@ -8,7 +8,7 @@ class User {
 		this.purchase = purchase;
 	}
 }
-const yusuf = new User("yusuf", true, [], []);
+const yusuf = new User('yusuf', true, [], []);
 console.log(yusuf);
 
 class Item {
@@ -18,17 +18,17 @@ class Item {
 	}
 }
 
-const count = document.querySelector(".count");
-const categories = document.querySelector(".categories");
-const products = document.querySelector(".products");
-const shoppingCart = document.querySelector(".cart");
-const dropDownshoppingCart = document.querySelector(".cart--product--list");
-const deleteProduct = document.getElementById("del");
-const totalProduct = document.getElementById("total--product");
-const subTotal = document.getElementById("sub--total");
-const totalProduct2 = document.getElementById("total--product2");
-const subTotal2 = document.getElementById("sub--total2");
-const purchaseBtn = [...document.querySelectorAll(".purchase--btn")];
+const count = document.querySelector('.count');
+const categories = document.querySelector('.categories');
+const products = document.querySelector('.products');
+const shoppingCart = document.querySelector('.cart');
+const dropDownshoppingCart = document.querySelector('.cart--product--list');
+const deleteProduct = document.getElementById('del');
+const totalProduct = document.getElementById('total--product');
+const subTotal = document.getElementById('sub--total');
+const totalProduct2 = document.getElementById('total--product2');
+const subTotal2 = document.getElementById('sub--total2');
+const purchaseBtn = [...document.querySelectorAll('.purchase--btn')];
 
 let state = {};
 let selectedShowProducts;
@@ -36,7 +36,7 @@ let shoppingCarts;
 let cartProductItems = [];
 
 purchaseBtn.forEach(btn => {
-	if (cartProductItems.length < 1) btn.classList.add("hidden");
+	if (cartProductItems.length < 1) btn.classList.add('hidden');
 });
 
 const getCategory = function () {
@@ -44,7 +44,7 @@ const getCategory = function () {
 	let categoryURL = [];
 	let showProduct;
 
-	fetch("https://fakestoreapi.com/products/categories")
+	fetch('https://fakestoreapi.com/products/categories')
 		.then(res => {
 			if (!res.ok) throw new Error(`product not found! (${response.status})`);
 			return res.json();
@@ -61,7 +61,7 @@ const getCategory = function () {
 					return fetch(url)
 						.then(res => res.json())
 						.then(data => {
-							categories.classList.remove("hidden");
+							categories.classList.remove('hidden');
 							renderCategory(data, data[2].image);
 							return data;
 						});
@@ -73,7 +73,7 @@ const getCategory = function () {
 						if (!acc[key]) {
 							acc[key] = value;
 							// add tax to products
-							key === "electronics"
+							key === 'electronics'
 								? acc[key].forEach(product => (product.tax = 0.18))
 								: acc[key].forEach(product => (product.tax = 0.1));
 							//add quantity to products
@@ -89,7 +89,7 @@ const getCategory = function () {
 						return acc;
 					}, state);
 					console.log(state);
-					showProduct = [...document.querySelectorAll(".show--product")];
+					showProduct = [...document.querySelectorAll('.show--product')];
 					return showProduct;
 				})
 				.then(data => {
@@ -104,15 +104,15 @@ const getProduct = function (data) {
 	let addCartBtn;
 
 	data.forEach(el => {
-		el.addEventListener("click", function (e) {
-			let selectedEl = e.target.closest(".categories--cart");
+		el.addEventListener('click', function (e) {
+			let selectedEl = e.target.closest('.categories--cart');
 			selectedCategory = selectedEl.children[0].textContent;
 			selectedShowProducts = state[selectedCategory];
 			renderProductName();
 			selectedShowProducts.forEach(el => {
 				renderProduct(el);
 			});
-			addCartBtn = [...document.querySelectorAll(".add--cart")];
+			addCartBtn = [...document.querySelectorAll('.add--cart')];
 			addToCart(addCartBtn);
 		});
 	});
@@ -122,29 +122,30 @@ const addToCart = function (btn) {
 	let selectedProductID;
 	let deleteCartBtn;
 	let quantityElID;
+	// let changedQuantity;
 
 	btn.forEach(el => {
-		el.addEventListener("click", function (e) {
-			let selectedEl = e.target.closest(".products--cart");
+		el.addEventListener('click', function (e) {
+			let selectedEl = e.target.closest('.products--cart');
 			selectedProductID = selectedEl.children[3].textContent.replace(
-				"ID: ",
-				""
+				'ID: ',
+				''
 			);
 
 			// Get current product
 			let result = state[selectedShowProducts[0].category].reduce(
 				(acc, value) => {
-					acc === value["id"] ? (acc = value) : "";
+					acc === value['id'] ? (acc = value) : '';
 					return acc;
 				},
 				+selectedProductID
 			);
-
+			console.log(result);
 			let pushData = true;
 			if (cartProductItems.length > 0) {
 				cartProductItems.some(val => {
 					if (val.id === result.id) {
-						val.quantity === 5 ? alert("You cant add the product over 5!") : "";
+						val.quantity === 5 ? alert('You cant add the product over 5!') : '';
 						val.quantity < 5
 							? (val.quantity += 1)
 							: (val.quantity = val.quantity);
@@ -153,7 +154,7 @@ const addToCart = function (btn) {
 				});
 			}
 
-			pushData ? cartProductItems.push(result) : "";
+			pushData ? cartProductItems.push(result) : '';
 			renderCartCount();
 			let promise1 = new Promise(resolve => {
 				if (pushData) {
@@ -164,41 +165,56 @@ const addToCart = function (btn) {
 			});
 
 			promise1.then(() => {
-				deleteCartBtn = [...document.querySelectorAll("#del")];
+				deleteCartBtn = [...document.querySelectorAll('#del')];
 
-				shoppingCarts = [...document.querySelectorAll(".shopping--cart")];
-
+				shoppingCarts = [...document.querySelectorAll('.shopping--cart')];
+				console.log(shoppingCarts);
 				renderTotalCartPrice();
 
 				// increase quantity of current product
-				!pushData
-					? shoppingCarts.forEach(el => {
-							if (
-								quantityElID ===
-								+el.children[3].children[0].textContent.replace("ID: ", "")
-							) {
-								// re-render price depends to quantity
-								updatePrice(el, result);
+				if (!pushData) {
+					shoppingCarts.forEach(el => {
+						if (
+							quantityElID ===
+							+el.children[3].children[0].textContent.replace('ID: ', '')
+						) {
+							//buraya eklemeyi dene
 
-								// increase quantity value
-								el.children[1].children[2].children[1].value = result.quantity;
-							}
-					  })
-					: "";
+							// re-render price depends to quantity
+							updatePrice(el, result);
+
+							// increase quantity value
+							el.children[1].children[2].children[1].value = result.quantity;
+						}
+					});
+				}
 
 				shoppingCarts.forEach(el => {
 					el.children[1].children[2].children[1].addEventListener(
-						"change",
+						'change',
 						function (e) {
 							selectedProductID =
-								+el.children[3].children[0].textContent.replace("ID: ", "");
+								+el.children[3].children[0].textContent.replace('ID: ', '');
 							cartProductItems.forEach(product => {
 								if (product.id === selectedProductID) {
 									product.quantity =
 										+el.children[1].children[2].children[1].value;
 
+									let changedQuantity = shoppingCarts.filter(
+										cart =>
+											+cart.children[3].children[0].textContent.replace(
+												'ID: ',
+												''
+											) === +e.target.dataset.quantityid
+									);
+									console.log(changedQuantity);
+									changedQuantity[0].children[1].children[2].children[1].value =
+										changedQuantity[1].children[1].children[2].children[1].value =
+											product.quantity;
+
 									// re-render price depends to quantity
-									updatePrice(el, product);
+									console.log(el);
+									updatePrice(changedQuantity, product);
 									renderCartCount();
 								}
 							});
@@ -207,7 +223,7 @@ const addToCart = function (btn) {
 				});
 
 				purchaseBtn.forEach(btn => {
-					if (cartProductItems.length > 0) btn.classList.remove("hidden");
+					if (cartProductItems.length > 0) btn.classList.remove('hidden');
 				});
 				removeCartProduct(deleteCartBtn);
 			});
@@ -218,12 +234,12 @@ const addToCart = function (btn) {
 const removeCartProduct = function (product) {
 	let selectedProductID;
 	product.forEach(el => {
-		el.addEventListener("click", function (e) {
-			let selectedEl = e.target.closest(".shopping--cart");
+		el.addEventListener('click', function (e) {
+			let selectedEl = e.target.closest('.shopping--cart');
 			selectedProductID =
-				selectedEl.children[3].children[0].textContent.replace("ID: ", "");
+				selectedEl.children[3].children[0].textContent.replace('ID: ', '');
 			let result = cartProductItems.reduce((acc, value) => {
-				acc === value["id"] ? (acc = value) : "";
+				acc === value['id'] ? (acc = value) : '';
 				return acc;
 			}, +selectedProductID);
 			let index = cartProductItems.indexOf(result);
@@ -243,7 +259,7 @@ const removeCartProduct = function (product) {
 				// removing selected product each side (dropDown and shopping Cart section)
 				shoppingCarts.find(cart => {
 					if (
-						+cart.children[3].children[0].textContent.replace("ID: ", "") ===
+						+cart.children[3].children[0].textContent.replace('ID: ', '') ===
 						+selectedProductID
 					)
 						cart.remove();
@@ -253,7 +269,7 @@ const removeCartProduct = function (product) {
 			renderTotalCartPrice();
 			renderCartCount();
 			purchaseBtn.forEach(btn => {
-				if (cartProductItems.length < 1) btn.classList.add("hidden");
+				if (cartProductItems.length < 1) btn.classList.add('hidden');
 			});
 		});
 	});
@@ -272,7 +288,7 @@ const renderCategory = function (data, img) {
     </div>
     `;
 
-	categories.insertAdjacentHTML("beforeend", html);
+	categories.insertAdjacentHTML('beforeend', html);
 };
 
 const renderProduct = function (product) {
@@ -289,11 +305,11 @@ const renderProduct = function (product) {
   </div>
   `;
 
-	products.insertAdjacentHTML("beforeend", html);
+	products.insertAdjacentHTML('beforeend', html);
 };
 
 const renderCartProduct = function (product) {
-	shoppingCart.classList.remove("hidden");
+	shoppingCart.classList.remove('hidden');
 	const html = `
       <div class="shopping--cart">
         <div class="img">
@@ -318,9 +334,9 @@ const renderCartProduct = function (product) {
             </select>
           </div>
           <div class="price">
-            <h3>Price: ${product.price + " +"}</h3>
-            <h3> ${product.tax * 100 + "% "}</h3>
-            <h3>${" = " + product.totalPrice + " $"}</h3>
+            <h3>Price: ${product.price + ' +'}</h3>
+            <h3> ${product.tax * 100 + '% '}</h3>
+            <h3>${' = ' + product.totalPrice + ' $'}</h3>
           </div>
         </div>
         <div class="delete">
@@ -333,12 +349,12 @@ const renderCartProduct = function (product) {
      
   `;
 
-	shoppingCart.insertAdjacentHTML("afterbegin", html);
-	dropDownshoppingCart.insertAdjacentHTML("afterbegin", html);
+	shoppingCart.insertAdjacentHTML('afterbegin', html);
+	dropDownshoppingCart.insertAdjacentHTML('afterbegin', html);
 };
 
 const renderProductName = function () {
-	products.classList.remove("hidden");
+	products.classList.remove('hidden');
 	const upperCase =
 		selectedShowProducts[0].category.slice(0, 1).toUpperCase() +
 		selectedShowProducts[0].category.slice(1);
@@ -350,8 +366,8 @@ const renderProductName = function () {
 };
 
 const renderCartCount = function () {
-	if (cartProductItems.length === 0) shoppingCart.classList.add("hidden");
-
+	if (cartProductItems.length === 0) shoppingCart.classList.add('hidden');
+	console.log(cartProductItems);
 	let productCount = cartProductItems.reduce((acc, value) => {
 		acc += value.quantity;
 		return acc;
@@ -369,9 +385,18 @@ const updatePrice = function (el, product) {
 		product.quantity
 	).toFixed(2);
 	totalPrice = product.totalPrice;
-	el.children[1].children[3].children[2].textContent = `${
-		" = " + totalPrice.toFixed(2) + " $"
-	}`;
+
+	if (Array.isArray(el)) {
+		el.forEach(
+			el =>
+				(el.children[1].children[3].children[2].textContent = `${
+					' = ' + totalPrice.toFixed(2) + ' $'
+				}`)
+		);
+	} else
+		el.children[1].children[3].children[2].textContent = `${
+			' = ' + totalPrice.toFixed(2) + ' $'
+		}`;
 
 	renderTotalCartPrice();
 };
